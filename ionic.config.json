@@ -1,0 +1,7 @@
+{
+  "name": "eco-footprint-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
