@@ -26,6 +26,9 @@ import {
 } from "../model/Inference";
 import environment from "../environment";
 import TransportSelectionModal from "./TransportSelectionModal";
+import { Selectors } from "../selectors";
+import { connect } from "react-redux";
+import { State } from "../reducers/stateTypes";
 
 const options = {
   chart: {
@@ -86,7 +89,11 @@ const FakeWalk = [
   { lat: 46.25684015892485, lng: 6.0266320669602065, ts: 1606576879889 },
 ];
 
-const RecordTrips: React.FC = () => {
+interface RecordTripsProps {
+  creds: any;
+}
+
+const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
   const [footprint, setFootprint] = useState(0);
   const [isTravelling, setIsTravelling] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -150,7 +157,16 @@ const RecordTrips: React.FC = () => {
 
   const submitTrip = async (data: InferenceResponse) => {
     setIsLoading(true);
-    await instance.post("/api/footprint/trip", data);
+    try {
+      await instance.post("/footprint/trip", data, {
+        auth: {
+          username: creds.id,
+          password: creds.apiKey,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
     setIsLoading(false);
     setShowModal(false);
   };
@@ -198,4 +214,6 @@ const RecordTrips: React.FC = () => {
   );
 };
 
-export default RecordTrips;
+export default connect((s: State) => ({
+  creds: Selectors.getCreds(s),
+}))(RecordTrips);
