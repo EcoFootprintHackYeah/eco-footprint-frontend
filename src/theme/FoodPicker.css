@@ -1,0 +1,17 @@
+.food-item {
+    max-width: 250px;
+    margin: auto;
+    height: 50px;
+    display:block;
+    text-align: center;
+  }
+  .icon-button {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+  }
+
+  .food-label {
+    display:block;
+    text-align: center;
+  }
