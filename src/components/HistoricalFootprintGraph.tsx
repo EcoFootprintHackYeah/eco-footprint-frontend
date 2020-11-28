@@ -1,6 +1,6 @@
-import { IonTitle } from "@ionic/react";
+import {IonTitle, useIonViewWillEnter} from "@ionic/react";
 import { makeStyles } from "@material-ui/core";
-import React from "react";
+import React, {useState} from "react";
 import ReactApexChart from "react-apexcharts";
 
 interface HistoricalFootprint {
@@ -93,10 +93,12 @@ const HistoricalFootprintGraph = ({data, recommendedLevel}: { data: HistoricalFo
     name: 'Footprint',
     data: data.ys
   }]
+  const [height, setHeight] = useState(350)
+  useIonViewWillEnter(() => setHeight(350 + Math.random()))
   return (
     <>
     <IonTitle className={classes.title}>Your historical footprint</IonTitle>
-    <ReactApexChart options={options(data, recommendedLevel)} type={'line'} series={series} height={350}/>
+    <ReactApexChart options={options(data, recommendedLevel)} type={'line'} series={series} height={height}/>
     </>
   )
 }

@@ -20,6 +20,7 @@ import {useSelector} from "react-redux";
 import {Selectors} from "../selectors";
 import instance from "../services/apiCalls";
 import {travelTypeToIcon} from "./TransportSelectionModal";
+import { useIonViewWillEnter } from "@ionic/react";
 
 const useStyles = makeStyles({
   title: {
@@ -39,6 +40,7 @@ const JourneysList: React.FC = () => {
   const [shouldRefreshJourneys, setShouldRefreshJourneys] = useState(true)
   const auth = useSelector(Selectors.getCreds)
   const classes = useStyles();
+  useIonViewWillEnter(() => setShouldRefreshJourneys(true))
 
   useEffect(() => {
     if(shouldRefreshJourneys) {
