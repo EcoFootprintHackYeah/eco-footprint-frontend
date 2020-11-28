@@ -14,6 +14,7 @@ import {
 import {AIRPLANE, BICYCLE, BUS, CAR} from "../model/TransportMode";
 import {EditJourneyModal} from "../components/EditJourneyModal";
 import {JourneyEntry} from "../model/JourneyEntry";
+import {datesAreOnSameDay} from "../services/dates";
 
 const data: JourneyEntry[] = [{
   startDate: new Date(2020, 11, 20, 10, 15),
@@ -51,12 +52,6 @@ const data: JourneyEntry[] = [{
   co2Footprint: 70,
   mode: BUS
 }]
-
-const datesAreOnSameDay = (first: Date, second: Date) =>
-  first.getFullYear() === second.getFullYear() &&
-  first.getMonth() === second.getMonth() &&
-  first.getDate() === second.getDate();
-
 
 const JourneysList: React.FC = () => {
   const [editingJourney, setEditingJourney] = useState<JourneyEntry | undefined>(undefined)

@@ -31,6 +31,7 @@ import {connect, useDispatch} from "react-redux";
 import {State} from "./reducers/stateTypes";
 import {Selectors} from "./selectors";
 import Registration from "./pages/Registration";
+import AdvicesSchedulerWrapper from "./components/AdvicesSchedulerWrapper";
 
 const {Storage} = Plugins;
 

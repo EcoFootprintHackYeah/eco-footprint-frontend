@@ -7,7 +7,7 @@ import {
   IonHeader,
   IonLoading,
   IonPage,
-  IonRow,
+  IonRow, IonTabs,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -29,6 +29,7 @@ import TransportSelectionModal from "./TransportSelectionModal";
 import { Selectors } from "../selectors";
 import { connect } from "react-redux";
 import { State } from "../reducers/stateTypes";
+import AdvicesSchedulerWrapper from "../components/AdvicesSchedulerWrapper";
 
 const options = {
   chart: {
@@ -173,6 +174,7 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
 
   return (
     <IonPage>
+      <AdvicesSchedulerWrapper />
       {inference && (
         <TransportSelectionModal
           show={show}
