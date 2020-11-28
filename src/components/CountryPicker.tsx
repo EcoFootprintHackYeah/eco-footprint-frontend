@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  IonImg,
+  IonImg, IonInput,
   IonItem,
   IonLabel,
   IonList,
@@ -11,6 +11,7 @@ import "../theme/CountryPicker.css";
 import { ElectricityType } from "carbon-footprint";
 import { FormDict } from "./RegistrationForm";
 import { makeStyles } from "@material-ui/core";
+import {filter} from "ionicons/icons";
 
 const useStyles = makeStyles({
   root: {
@@ -25,6 +26,7 @@ interface CountryPickerProps {
 const CountryPicker: React.FC<CountryPickerProps> = ({ onCountryChange }) => {
   const classes = useStyles();
   const [country, setCountry] = useState("");
+  const [filterValue, setFilterValue] = useState("")
 
   const capitalize = (s: string) => {
     if (typeof s !== "string") return "";
@@ -38,9 +40,11 @@ const CountryPicker: React.FC<CountryPickerProps> = ({ onCountryChange }) => {
   return (
     <>
       <IonListHeader>What country are you from?</IonListHeader>
+      <IonItem><IonInput value={filterValue} onIonChange={e => setFilterValue(e.detail.value!)} placeholder={"Filter"}/></IonItem>
       <IonList className="country-ion-list">
         {Object.keys(ElectricityType)
           .filter(excludeElectricityType)
+          .filter(country => filterValue === "" || country.toLowerCase().includes(filterValue.toLowerCase()))
           .sort()
           .map((key) => (
             <IonItem
