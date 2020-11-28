@@ -6,11 +6,14 @@ import {
   IonGrid,
   IonHeader,
   IonImg,
+  IonItem,
+  IonLabel,
   IonLoading,
   IonPage,
   IonRow,
   IonTabs,
   IonTitle,
+  IonToggle,
   IonToolbar,
 } from "@ionic/react";
 import "./RecordTrips.css";
@@ -40,7 +43,7 @@ const categoriesOptions = {
     radialBar: {
       offsetY: 0,
       startAngle: 0,
-      endAngle: 270,
+      endAngle: 360,
       hollow: {
         margin: 5,
         size: "30%",
@@ -63,11 +66,11 @@ const categoriesOptions = {
       top: 0,
     },
   },
-  colors: ["#1ab7ea", "#0084ff", "#39539E", "#0077B5"],
+  colors: ["#EF946C", "#C4A77D", "#70877F", "#454372", "#2F2963"],
   labels: ["Trips", "Electricity", "Music", "Movies", "Food"],
   legend: {
     show: true,
-    floating: true,
+    floating: false,
     fontSize: "16px",
     position: "left",
     offsetX: 15,
@@ -163,12 +166,24 @@ interface RecordTripsProps {
   creds: any;
 }
 
+interface AggregateFootprintState {
+  trips: number;
+  electricity: number;
+  music: number;
+  streaming: number;
+  food: number;
+}
+
 const getPercOfMax = (value: number) => {
   return (value / MaxBudget) * 100;
 };
 
 const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
   const [footprint, setFootprint] = useState(0);
+  const [checked, setChecked] = useState(false);
+  const [aggregatedFootprint, setAggregatedFoodprint] = useState<
+    AggregateFootprintState | undefined
+  >(undefined);
   const [isTravelling, setIsTravelling] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [show, setShowModal] = useState(false);
@@ -192,8 +207,41 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
     fetchFootprint();
   }, []);
 
+  useEffect(() => {
+    async function get() {
+      const request = await instance.get("/footprint/monthly/grouped", {
+        auth: {
+          username: creds.id,
+          password: creds.apiKey,
+        },
+      });
+      setAggregatedFoodprint(request.data);
+    }
+    get();
+  }, [setAggregatedFoodprint]);
+
   const onStart = () => {
     setIsTravelling(true);
+  };
+
+  const getMonthlyFootprint = async () => {
+    const request = await instance.get("/footprint/monthly", {
+      auth: {
+        username: creds.id,
+        password: creds.apiKey,
+      },
+    });
+    setFootprint(request.data.total);
+  };
+
+  const getMonthlyFootprintAggregated = async () => {
+    const request = await instance.get("/footprint/monthly/grouped", {
+      auth: {
+        username: creds.id,
+        password: creds.apiKey,
+      },
+    });
+    setAggregatedFoodprint(request.data.total);
   };
 
   const onEnd = async (data: GeolocationPosition[]) => {
@@ -231,6 +279,7 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
     }
     setIsLoading(false);
     setShowModal(false);
+    getMonthlyFootprint();
   };
 
   return (
@@ -263,24 +312,47 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
             <>
               <IonRow className="ion-align-items-center">
                 <IonCol>
-                  <ReactApexChart
-                    options={options}
-                    series={[getPercOfMax(footprint).toFixed(2)]}
-                    type="radialBar"
-                    height={320}
-                  />
+                  <IonItem>
+                    <IonLabel>Show fine-grained data</IonLabel>
+                    <IonToggle
+                      checked={checked}
+                      onIonChange={(e) => setChecked(e.detail.checked)}
+                    />
+                  </IonItem>
                 </IonCol>
               </IonRow>
-              <IonRow>
-                <IonCol>
-                  <ReactApexChart
-                    options={categoriesOptions}
-                    series={[50, 60, 10, 70, 20]}
-                    type="radialBar"
-                    height={300}
-                  />
-                </IonCol>
-              </IonRow>
+              {!checked && (
+                <IonRow className="ion-align-items-center">
+                  <IonCol>
+                    <ReactApexChart
+                      options={options}
+                      series={[getPercOfMax(footprint).toFixed(2)]}
+                      type="radialBar"
+                      height={320}
+                    />
+                  </IonCol>
+                </IonRow>
+              )}
+              {aggregatedFootprint && checked && (
+                <IonRow>
+                  <IonCol>
+                    <ReactApexChart
+                      options={categoriesOptions}
+                      series={[
+                        getPercOfMax(aggregatedFootprint!.trips).toFixed(2),
+                        getPercOfMax(aggregatedFootprint!.electricity).toFixed(
+                          2
+                        ),
+                        getPercOfMax(aggregatedFootprint!.music).toFixed(2),
+                        getPercOfMax(aggregatedFootprint!.streaming).toFixed(2),
+                        getPercOfMax(aggregatedFootprint!.food).toFixed(2),
+                      ]}
+                      type="radialBar"
+                      height={300}
+                    />
+                  </IonCol>
+                </IonRow>
+              )}
             </>
           )}
           <IonRow>
