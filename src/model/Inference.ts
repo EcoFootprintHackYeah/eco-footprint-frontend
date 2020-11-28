@@ -1,8 +1,15 @@
+export enum TravelType {
+  walking = "walking",
+  jogging = "jogging",
+  biking = "biking",
+  driving = "driving",
+}
+
 export interface InferenceResponse {
   distances: number[];
   speeds: number[];
   avgSpeed: number;
-  transport: string;
+  transport: TravelType;
   totalDistance: number;
 }
 

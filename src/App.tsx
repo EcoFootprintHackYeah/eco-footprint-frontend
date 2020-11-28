@@ -2,8 +2,8 @@ import React, {useEffect} from "react";
 import {Redirect, Route} from "react-router-dom";
 import {IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs,} from "@ionic/react";
 import {IonReactRouter} from "@ionic/react-router";
-import {ellipse, square, triangle} from "ionicons/icons";
-import Tab1 from "./pages/Tab1";
+import {ellipse, square, triangle, compass } from "ionicons/icons";
+import RecordTrips from "./pages/RecordTrips";
 import JourneysList from "./pages/JourneysList";
 import Tab3 from "./pages/Tab3";
 import {Plugins} from "@capacitor/core";
@@ -67,7 +67,7 @@ const App: React.FC<AppProps> = (props: AppProps) => {
         {props.authenticated && (
           <IonTabs>
             <IonRouterOutlet>
-              <Route path="/tab1" component={Tab1} exact={true}/>
+              <Route path="/tab1" component={RecordTrips} exact={true}/>
               <Route path="/tab2" component={JourneysList} exact={true}/>
               <Route path="/tab3" component={Tab3}/>
               <Route path="/registration" component={Registration} exact={true}/>
@@ -80,8 +80,8 @@ const App: React.FC<AppProps> = (props: AppProps) => {
 
             <IonTabBar slot="bottom">
               <IonTabButton tab="tab1" href="/tab1">
-                <IonIcon icon={triangle}/>
-                <IonLabel>Tab 1</IonLabel>
+                <IonIcon icon={compass}/>
+                <IonLabel>Record</IonLabel>
               </IonTabButton>
               <IonTabButton tab="tab2" href="/tab2">
                 <IonIcon icon={ellipse}/>
