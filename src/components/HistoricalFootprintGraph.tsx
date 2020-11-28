@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core";
 import React, {useState} from "react";
 import ReactApexChart from "react-apexcharts";
 
-interface HistoricalFootprint {
+export interface HistoricalFootprint {
   xs: string[]
   ys: number[]
   xlabel: string
