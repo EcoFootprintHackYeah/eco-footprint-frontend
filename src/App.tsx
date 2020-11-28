@@ -71,8 +71,8 @@ const App: React.FC<AppProps> = (props: AppProps) => {
   return (
     <IonApp>
       <IonReactRouter>
-        {/* {!props.authenticated && <CreateAccount />} */}
-        {/* {props.authenticated && ( */}
+        {!props.authenticated && <CreateAccount />}
+        {props.authenticated && (
           <IonTabs>
             <IonRouterOutlet>
               <Route path="/tab1" component={Tab1} exact={true} />
@@ -100,7 +100,7 @@ const App: React.FC<AppProps> = (props: AppProps) => {
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
-        {/* )} */}
+        )}
       </IonReactRouter>
     </IonApp>
   );
