@@ -5,6 +5,7 @@ import {
   IonContent,
   IonGrid,
   IonHeader,
+  IonLoading,
   IonPage,
   IonRow,
   IonTitle,
@@ -14,6 +15,15 @@ import "./Tab1.css";
 import ReactApexChart from "react-apexcharts";
 import instance from "../services/apiCalls";
 import CreateAccount from "../components/CreateAccount";
+import { Geolocation, GeolocationPosition } from "@capacitor/core";
+import MapComponent from "./MapComponent";
+import Axios, { AxiosResponse } from "axios";
+import {
+  InferenceData,
+  InferenceRequest,
+  InferenceResponse,
+} from "../model/Inference";
+import environment from "../environment";
 
 const options = {
   chart: {
@@ -44,6 +54,8 @@ const options = {
 
 const Tab1: React.FC = () => {
   const [footprint, setFootprint] = useState(0);
+  const [isTravelling, setIsTravelling] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchURL = "";
 
@@ -69,8 +81,32 @@ const Tab1: React.FC = () => {
     }, 1000);
   }, []);
 
+  const onStart = () => {
+    setIsTravelling(true);
+  };
+
+  const onEnd = async (data: GeolocationPosition[]) => {
+    console.log(data);
+    setIsTravelling(false);
+    setIsLoading(true);
+
+    const reqData: InferenceData[] = data.map((d) => ({
+      lat: d.coords.latitude,
+      lng: d.coords.longitude,
+      ts: d.timestamp,
+    }));
+
+    const inferenceResponse = await Axios.post<
+      InferenceRequest,
+      AxiosResponse<InferenceResponse>
+    >(environment.inferenceEndpoint, { points: reqData });
+    console.log(inferenceResponse.data);
+    setIsLoading(false);
+  };
+
   return (
     <IonPage>
+      <IonLoading isOpen={isLoading} message={"Inferring..."} />
       <IonHeader>
         <IonToolbar>
           <IonTitle>Tab 1</IonTitle>
@@ -83,23 +119,20 @@ const Tab1: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonGrid>
+          {!isTravelling && (
+            <IonRow className="ion-align-items-center">
+              <IonCol>
+                <ReactApexChart
+                  options={options}
+                  series={[footprint]}
+                  type="radialBar"
+                  height={350}
+                />
+              </IonCol>
+            </IonRow>
+          )}
           <IonRow>
-              <CreateAccount />
-          </IonRow>
-          <IonRow className="ion-align-items-center">
-            <IonCol>
-              <ReactApexChart
-                options={options}
-                series={[footprint]}
-                type="radialBar"
-                height={350}
-              />
-            </IonCol>
-          </IonRow>
-          <IonRow className="ion-align-items-center">
-            <IonCol className="ion-text-center">
-              <IonButton>Start Travelling</IonButton>
-            </IonCol>
+            <MapComponent onTravelStart={onStart} onTravelEnd={onEnd} />
           </IonRow>
         </IonGrid>
       </IonContent>
