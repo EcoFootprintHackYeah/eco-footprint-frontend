@@ -71,7 +71,7 @@ export const TransportSelectionModal: React.FC<TransportSelectionModalProps> = (
   console.log(formData);
 
   const producedCO2 =
-    formData.totalDistance * resultToCarbonValue(formData.transport);
+    formData.totalDistance * 1000 * resultToCarbonValue(formData.transport);
 
   return (
     <IonModal isOpen={show} cssClass="my-custom-class">

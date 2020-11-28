@@ -31,6 +31,9 @@ import { connect } from "react-redux";
 import { State } from "../reducers/stateTypes";
 import AdvicesSchedulerWrapper from "../components/AdvicesSchedulerWrapper";
 
+// Paris agreement budget
+const MaxBudget = 166;
+
 const options = {
   chart: {
     height: 350,
@@ -94,6 +97,10 @@ interface RecordTripsProps {
   creds: any;
 }
 
+const getPercOfMax = (value: number) => {
+  return (value / MaxBudget) * 100;
+};
+
 const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
   const [footprint, setFootprint] = useState(0);
   const [isTravelling, setIsTravelling] = useState(false);
@@ -104,28 +111,18 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
     null
   );
 
-  const fetchURL = "";
-
   useEffect(() => {
     async function fetchFootprint() {
-      const request = await instance.post(
-        fetchURL,
-        {},
-        {
-          auth: {
-            username: "",
-            password: "",
-          },
-        }
-      );
-      return request;
+      const request = await instance.get("/footprint/monthly", {
+        auth: {
+          username: creds.id,
+          password: creds.apiKey,
+        },
+      });
+      setFootprint(request.data.total);
     }
 
-    // TODO remove
-    setTimeout(() => {
-      console.log("World!");
-      setFootprint(72);
-    }, 1000);
+    fetchFootprint();
   }, []);
 
   const onStart = () => {
@@ -200,7 +197,7 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
               <IonCol>
                 <ReactApexChart
                   options={options}
-                  series={[footprint]}
+                  series={[getPercOfMax(footprint).toFixed(2)]}
                   type="radialBar"
                   height={350}
                 />
