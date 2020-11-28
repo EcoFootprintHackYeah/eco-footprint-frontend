@@ -1,10 +1,10 @@
-import {TransportMode} from "./TransportMode";
+import {TravelType} from "./Inference";
 
 export interface JourneyEntry {
-  startDate: Date,
-  endDate: Date,
+  id: number,
+  date: Date,
   distance: number,
   avgSpeed: number,
   co2Footprint: number,
-  mode: TransportMode
+  mode: TravelType
 }

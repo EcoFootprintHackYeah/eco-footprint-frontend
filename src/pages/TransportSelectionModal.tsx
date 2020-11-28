@@ -30,7 +30,7 @@ export interface TransportSelectionModalProps {
   onSubmit: (d: InferenceResponse) => void;
 }
 
-const resultToIcon = (transport: TravelType) => {
+export const travelTypeToIcon = (transport: TravelType) => {
   switch (transport) {
     case TravelType.biking:
       return bicycle;
@@ -88,7 +88,7 @@ export const TransportSelectionModal: React.FC<TransportSelectionModalProps> = (
               <IonAvatar>
                 <IonIcon
                   size="large"
-                  icon={resultToIcon(formData.transport)}
+                  icon={travelTypeToIcon(formData.transport)}
                   color={"white"}
                 />
               </IonAvatar>

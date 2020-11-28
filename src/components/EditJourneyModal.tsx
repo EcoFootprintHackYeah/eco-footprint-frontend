@@ -9,13 +9,13 @@ import {
   IonList,
   IonModal,
   IonSegment,
-  IonSegmentButton,
+  IonSegmentButton, IonSelect, IonSelectOption,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
 import React, { useState } from "react";
-import { ALL_MODES, TransportMode } from "../model/TransportMode";
 import { JourneyEntry } from "../model/JourneyEntry";
+import {TravelType} from "../model/Inference";
 
 const DateTimeInput = ({
   value,
@@ -31,7 +31,7 @@ const DateTimeInput = ({
     <IonDatetime
       value={value.toISOString()}
       onIonChange={(e) => setValue(new Date(Date.parse(e.detail.value!)))}
-      displayFormat="MM/DD/YYYY HH:mm"
+      displayFormat="MM/DD/YYYY"
     />
   </IonItem>
 );
@@ -42,12 +42,10 @@ export const EditJourneyModal = ({
   journey,
 }: {
   close: () => void;
-  save: (journey: JourneyEntry) => void;
+  save: (update: any) => void;
   journey: JourneyEntry;
 }): JSX.Element => {
-  const [mode, setMode] = useState<TransportMode>(journey.mode);
-  const [startDate, setStartDate] = useState<Date>(journey.startDate);
-  const [endDate, setEndDate] = useState<Date>(journey.endDate);
+  const [mode, setMode] = useState<TravelType>(journey.mode);
   const [distance, setDistance] = useState<number>(journey.distance);
 
   return (
@@ -61,52 +59,47 @@ export const EditJourneyModal = ({
           </IonHeader>
           <IonList>
             <IonItem>
-              <IonLabel position="floating">Mode of transport</IonLabel>
+              <IonLabel>Transport mode</IonLabel>
+              <IonSelect
+                value={mode}
+                okText="Okay"
+                cancelText="Dismiss"
+                onIonChange={(e) =>
+                  setMode(e.detail.value)
+                }
+              >
+                <IonSelectOption value="walking">Walking</IonSelectOption>
+                <IonSelectOption value="jogging">Jogging</IonSelectOption>
+                <IonSelectOption value="biking">Biking</IonSelectOption>
+                <IonSelectOption value="driving">Driving</IonSelectOption>
+              </IonSelect>
             </IonItem>
-            <IonSegment
-              value={mode.name}
-              onIonChange={(e) =>
-                setMode(ALL_MODES.find((m) => m.name === e.detail.value)!)
-              }
-            >
-              {ALL_MODES.map((m) => (
-                <IonSegmentButton value={m.name}>
-                  <IonLabel>{m.name}</IonLabel>
-                </IonSegmentButton>
-              ))}
-            </IonSegment>
             <IonItem>
               <IonLabel position="floating">Distance</IonLabel>
               <IonInput
-                value={distance}
+                value={distance.toFixed(2)}
                 type="number"
-                onIonChange={(e) => setDistance(parseInt(e.detail.value!))}
-                clearInput
+                onIonChange={(e) => {
+                  setDistance(parseFloat(e.detail.value!))
+                }}
+                step={"0.01"}
               />
             </IonItem>
-            <DateTimeInput
-              value={startDate}
-              setValue={setStartDate}
-              label={"Start datetime"}
-            />
-            <DateTimeInput
-              value={endDate}
-              setValue={setEndDate}
-              label={"End datetime"}
-            />
+            {/*<DateTimeInput*/}
+            {/*  value={date}*/}
+            {/*  setValue={setDate}*/}
+            {/*  label={"Date"}*/}
+            {/*/>*/}
           </IonList>
         </IonContent>
       )}
       <IonButton
         onClick={() => {
-          save(
-            Object.assign({}, journey, {
+          save({
               distance: distance,
-              startDate: startDate,
-              endDate: endDate,
-              mode: mode,
-            })
-          );
+              transport: mode,
+              id: journey.id,
+            });
           close();
         }}
       >
