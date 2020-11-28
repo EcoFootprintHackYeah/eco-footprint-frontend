@@ -1,6 +1,34 @@
 import React from "react"
-import RegistrationForm, {RegistrationFormPart, RegistrationFormPartProps} from "../components/RegistrationForm";
-import {IonButton, IonInput} from "@ionic/react";
+import RegistrationForm, {
+  FormDict,
+  RegistrationFormPart,
+  RegistrationFormPartProps
+} from "../components/RegistrationForm";
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonIcon,
+  IonInput
+} from "@ionic/react";
+import {leaf} from "ionicons/icons";
+
+const WelcomeRegistrationPart = () =>
+  <IonCard>
+    <img src="https://jacksonjournal.news/wp-content/uploads/2020/10/unnamed-file.jpg"/>
+    <IonCardHeader>
+      <IonCardSubtitle>Account creation</IonCardSubtitle>
+      <IonCardTitle>Welcome</IonCardTitle>
+    </IonCardHeader>
+
+    <IonCardContent>
+      We need a bit more information about you in order to better estimate
+      your CO2 <IonIcon icon={leaf}/> footprint.
+    </IonCardContent>
+  </IonCard>
 
 const FormPart1: RegistrationFormPart = ({onDataUpdate}: RegistrationFormPartProps) =>
   <>
@@ -8,19 +36,21 @@ const FormPart1: RegistrationFormPart = ({onDataUpdate}: RegistrationFormPartPro
   </>
 
 const FormPart1InitialData = {country: 'Russia'}
-
 const FormPart2: RegistrationFormPart = ({currentPartData, onDataUpdate}: RegistrationFormPartProps) =>
   <>
-    <IonInput type={'number'} value={currentPartData['redMeat']}
-              onIonChange={e => onDataUpdate({redMeat: parseInt(e.detail.value!)})}/>
-    <IonInput type={'number'} value={currentPartData['whiteMeat']}
-              onIonChange={e => onDataUpdate({whiteMeat: parseInt(e.detail.value!)})}/>
+    <IonInput type={'number'} value={currentPartData['redMeatPerWeek']}
+              onIonChange={e => onDataUpdate({redMeatPerWeek: parseInt(e.detail.value!)})}/>
+    <IonInput type={'number'} value={currentPartData['whiteMeatPerWeek']}
+              onIonChange={e => onDataUpdate({whiteMeatPerWeek: parseInt(e.detail.value!)})}/>
   </>
 
-const FormPart2InitialData = {redMeat: 0, whiteMeat: 0}
+const FormPart2InitialData = {redMeatPerWeek: 0, whiteMeatPerWeek: 0, fishPerWeek: 2}
 
-const Registration = () =>
-  <RegistrationForm onSubmit={(data) => alert(JSON.stringify(data))} parts={[FormPart1, FormPart2]}
-                    initialData={[FormPart1InitialData, FormPart2InitialData]}/>
+const OtherPartsInitialData = {netflixHoursPerWeek: 5, musicHoursPerDay: 3, kwhPerMonth: 200}
+
+const Registration = ({onSubmit}: { onSubmit: (data: FormDict) => void }) =>
+  <RegistrationForm onSubmit={onSubmit}
+                    parts={[WelcomeRegistrationPart, FormPart1, FormPart2]}
+                    initialData={[FormPart1InitialData, FormPart2InitialData, OtherPartsInitialData]}/>
 
 export default Registration

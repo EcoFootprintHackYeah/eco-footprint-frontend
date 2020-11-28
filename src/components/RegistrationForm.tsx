@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {IonButton, IonContent} from "@ionic/react";
+import {IonButton, IonContent, IonGrid, IonRow} from "@ionic/react";
 
 export type FormDict = { [key: string]: string | number }
 
@@ -34,15 +34,21 @@ const RegistrationForm: React.FunctionComponent<RegistrationFormProps> = ({onSub
 
   return (
     <IonContent>
-      {parts[currentPart]({
-        currentPartData,
-        onDataUpdate: updateDate => setCurrentPartData({...currentPartData, ...updateDate})
-      })}
-      <IonButton onClick={() => handleNext()}>
-        {currentPart === parts.length - 1 ? 'Submit' : 'Next'}
-      </IonButton>
+      <IonGrid>
+        <IonRow>
+          {parts[currentPart]({
+            currentPartData,
+            onDataUpdate: updateDate => setCurrentPartData({...currentPartData, ...updateDate})
+          })}
+        </IonRow>
+        <IonRow className="ion-align-items-center">
+          <IonButton onClick={() => handleNext()}>
+            {currentPart === parts.length - 1 ? 'Submit' : 'Next'}
+          </IonButton>
+        </IonRow>
+      </IonGrid>
     </IonContent>
-  )
+)
 }
 
 export default RegistrationForm

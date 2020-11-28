@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Redirect, Route } from "react-router-dom";
-import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-} from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
-import { ellipse, square, triangle } from "ionicons/icons";
+import React, {useEffect} from "react";
+import {Redirect, Route} from "react-router-dom";
+import {IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs,} from "@ionic/react";
+import {IonReactRouter} from "@ionic/react-router";
+import {ellipse, square, triangle} from "ionicons/icons";
 import Tab1 from "./pages/Tab1";
 import JourneysList from "./pages/JourneysList";
 import Tab3 from "./pages/Tab3";
-import { Plugins } from "@capacitor/core";
+import {Plugins} from "@capacitor/core";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -35,12 +27,12 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 import CreateAccount from "./components/CreateAccount";
-import { connect, useDispatch } from "react-redux";
-import { State } from "./reducers/stateTypes";
-import { Selectors } from "./selectors";
-import { SetAuthenticatedAction } from "./actions";
+import {connect, useDispatch} from "react-redux";
+import {State} from "./reducers/stateTypes";
+import {Selectors} from "./selectors";
+import Registration from "./pages/Registration";
 
-const { Storage } = Plugins;
+const {Storage} = Plugins;
 
 interface AppProps {
   authenticated: boolean;
@@ -50,7 +42,7 @@ const App: React.FC<AppProps> = (props: AppProps) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    Storage.get({ key: "account" }).then((d) => {
+    Storage.get({key: "account"}).then((d) => {
       if (d && d.value) {
         dispatch({
           type: "SET_AUTHENTICATED",
@@ -71,31 +63,32 @@ const App: React.FC<AppProps> = (props: AppProps) => {
   return (
     <IonApp>
       <IonReactRouter>
-        {!props.authenticated && <CreateAccount />}
+        {!props.authenticated && <CreateAccount/>}
         {props.authenticated && (
           <IonTabs>
             <IonRouterOutlet>
-              <Route path="/tab1" component={Tab1} exact={true} />
-              <Route path="/tab2" component={JourneysList} exact={true} />
-              <Route path="/tab3" component={Tab3} />
+              <Route path="/tab1" component={Tab1} exact={true}/>
+              <Route path="/tab2" component={JourneysList} exact={true}/>
+              <Route path="/tab3" component={Tab3}/>
+              <Route path="/registration" component={Registration} exact={true}/>
               <Route
                 path="/"
-                render={() => <Redirect to="/tab1" />}
+                render={() => <Redirect to="/tab1"/>}
                 exact={true}
               />
             </IonRouterOutlet>
 
             <IonTabBar slot="bottom">
               <IonTabButton tab="tab1" href="/tab1">
-                <IonIcon icon={triangle} />
+                <IonIcon icon={triangle}/>
                 <IonLabel>Tab 1</IonLabel>
               </IonTabButton>
               <IonTabButton tab="tab2" href="/tab2">
-                <IonIcon icon={ellipse} />
+                <IonIcon icon={ellipse}/>
                 <IonLabel>Tab 2</IonLabel>
               </IonTabButton>
               <IonTabButton tab="tab3" href="/tab3">
-                <IonIcon icon={square} />
+                <IonIcon icon={square}/>
                 <IonLabel>Tab 3</IonLabel>
               </IonTabButton>
             </IonTabBar>

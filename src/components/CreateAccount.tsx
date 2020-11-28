@@ -1,33 +1,21 @@
 import React from "react";
-import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
-import { leaf } from "ionicons/icons";
-import { Plugins } from "@capacitor/core";
+import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar,} from "@ionic/react";
+import {Plugins} from "@capacitor/core";
 import instance from "../services/apiCalls";
-import { AxiosResponse } from "axios";
-import { UserModel } from "../services/userModel";
-import { useDispatch } from "react-redux";
+import {AxiosResponse} from "axios";
+import {UserModel} from "../services/userModel";
+import {useDispatch} from "react-redux";
+import Registration from "../pages/Registration";
+import {FormDict} from "./RegistrationForm";
 
-const { Storage } = Plugins;
+const {Storage} = Plugins;
 
 const CreateAccount: React.FC<{}> = () => {
   const dispatch = useDispatch();
 
-  async function authenticate() {
+  async function authenticate(userData: FormDict) {
     const response = await instance.post<any, AxiosResponse<UserModel>>(
-      "/user"
+      "/user", userData
     );
     if (response.status === 201) {
       await Storage.set({
@@ -50,20 +38,8 @@ const CreateAccount: React.FC<{}> = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonCard>
-          <img src="https://jacksonjournal.news/wp-content/uploads/2020/10/unnamed-file.jpg" />
-          <IonCardHeader>
-            <IonCardSubtitle>Account creation</IonCardSubtitle>
-            <IonCardTitle>Welcome</IonCardTitle>
-          </IonCardHeader>
-
-          <IonCardContent>
-            We need a bit more information about you in order to better estimate
-            your CO2 <IonIcon icon={leaf} /> footprint.
-          </IonCardContent>
-        </IonCard>
+        <Registration onSubmit={(data) => authenticate(data)}/>
       </IonContent>
-      <IonButton onClick={authenticate}>Authenticate</IonButton>
     </IonPage>
   );
 };
