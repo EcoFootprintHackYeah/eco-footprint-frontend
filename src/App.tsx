@@ -35,27 +35,44 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 import CreateAccount from "./components/CreateAccount";
+import { connect, useDispatch } from "react-redux";
+import { State } from "./reducers/stateTypes";
+import { Selectors } from "./selectors";
+import { SetAuthenticatedAction } from "./actions";
 
 const { Storage } = Plugins;
 
-const App: React.FC = () => {
-  const [authenticated, setAuthenticated] = useState(true);
+interface AppProps {
+  authenticated: boolean;
+}
+
+const App: React.FC<AppProps> = (props: AppProps) => {
+  const dispatch = useDispatch();
 
   useEffect(() => {
     Storage.get({ key: "account" }).then((d) => {
       if (d && d.value) {
-        console.log(d);
+        dispatch({
+          type: "SET_AUTHENTICATED",
+          payload: JSON.parse(d.value),
+          authenticated: true,
+        });
       } else {
-        console.log("nothing found!");
+        dispatch({
+          type: "SET_AUTHENTICATED",
+          authenticated: false,
+        });
       }
     });
   }, []);
 
+  console.log(props);
+
   return (
     <IonApp>
       <IonReactRouter>
-        {!authenticated && <CreateAccount />}
-        {authenticated && (
+        {!props.authenticated && <CreateAccount />}
+        {props.authenticated && (
           <IonTabs>
             <IonRouterOutlet>
               <Route path="/tab1" component={Tab1} exact={true} />
@@ -89,4 +106,6 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default connect((state: State) => ({
+  authenticated: Selectors.isAuthenticated(state),
+}))(App);
