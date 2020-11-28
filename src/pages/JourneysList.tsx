@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from 'react';
 import {
   IonAvatar,
   IonContent,
@@ -12,54 +12,14 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { AIRPLANE, BICYCLE, BUS, CAR } from "../model/TransportMode";
 import { EditJourneyModal } from "../components/EditJourneyModal";
 import { JourneyEntry } from "../model/JourneyEntry";
 import { datesAreOnSameDay } from "../services/dates";
 import { makeStyles } from "@material-ui/core";
-
-const data: JourneyEntry[] = [
-  {
-    startDate: new Date(2020, 11, 20, 10, 15),
-    endDate: new Date(2020, 11, 20, 11, 30),
-    distance: 600,
-    avgSpeed: 100,
-    co2Footprint: 70,
-    mode: CAR,
-  },
-  {
-    startDate: new Date(),
-    endDate: new Date(),
-    distance: 600,
-    avgSpeed: 100,
-    co2Footprint: 70,
-    mode: CAR,
-  },
-  {
-    startDate: new Date(2020, 5, 20, 10, 15),
-    endDate: new Date(2020, 5, 20, 11, 30),
-    distance: 600,
-    avgSpeed: 100,
-    co2Footprint: 70,
-    mode: AIRPLANE,
-  },
-  {
-    startDate: new Date(2020, 3, 20, 14, 15),
-    endDate: new Date(2020, 3, 21, 11, 30),
-    distance: 600,
-    avgSpeed: 100,
-    co2Footprint: 70,
-    mode: BICYCLE,
-  },
-  {
-    startDate: new Date(2020, 3, 20, 10, 15),
-    endDate: new Date(2020, 3, 20, 11, 30),
-    distance: 600,
-    avgSpeed: 100,
-    co2Footprint: 70,
-    mode: BUS,
-  },
-];
+import {useSelector} from "react-redux";
+import {Selectors} from "../selectors";
+import instance from "../services/apiCalls";
+import {travelTypeToIcon} from "./TransportSelectionModal";
 
 const useStyles = makeStyles({
   title: {
@@ -74,10 +34,48 @@ const useStyles = makeStyles({
 });
 
 const JourneysList: React.FC = () => {
-  const [editingJourney, setEditingJourney] = useState<
-    JourneyEntry | undefined
-  >(undefined);
+  const [editingJourney, setEditingJourney] = useState<JourneyEntry | undefined>(undefined)
+  const [journeys, setJourneys] = useState<JourneyEntry[]>([])
+  const [shouldRefreshJourneys, setShouldRefreshJourneys] = useState(true)
+  const auth = useSelector(Selectors.getCreds)
   const classes = useStyles();
+
+  useEffect(() => {
+    if(shouldRefreshJourneys) {
+      instance.get(
+        "/footprint/trips",
+        {
+          auth: {
+            username: auth.id.toString(),
+            password: auth.apiKey,
+          },
+        }
+      ).then(result => {
+        setJourneys(result.data.map((body: any) => {
+          return {
+            id: body.id,
+            co2Footprint: body.value,
+            distance: body.totalDistance,
+            avgSpeed: body.avgSpeed,
+            date: new Date(Date.parse(body.createdAt)),
+            mode: body.transport
+          }
+        }));
+      })
+      setShouldRefreshJourneys(false)
+    }
+  }, [shouldRefreshJourneys])
+
+  const updateJourney = (update: any) => instance.patch(
+    "/footprint/trip",
+    update,
+    {
+      auth: {
+        username: auth.id.toString(),
+        password: auth.apiKey,
+      },
+    }
+  ).then(() => setShouldRefreshJourneys(true))
 
   return (
     <IonPage>
@@ -90,50 +88,25 @@ const JourneysList: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        {editingJourney !== undefined && (
-          <EditJourneyModal
-            close={() => setEditingJourney(undefined)}
-            journey={editingJourney}
-            save={(journey) => alert(JSON.stringify(journey))}
-          />
-        )}
+        {editingJourney !== undefined &&
+        <EditJourneyModal close={() => setEditingJourney(undefined)}
+                          journey={editingJourney} save={updateJourney}/>}
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">Your journeys</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList>
-          {data.map((journey) => (
-            <IonItem
-              button
-              detail={false}
-              onClick={() => setEditingJourney(journey)}
-            >
-              <IonAvatar>
-                <IonIcon
-                  size="large"
-                  icon={journey.mode.icon}
-                  color={"white"}
-                />
-              </IonAvatar>
+          {journeys.map(journey =>
+            <IonItem button detail={false} onClick={() => setEditingJourney(journey)} key={journey.id}>
+              <IonAvatar><IonIcon size='large' icon={travelTypeToIcon(journey.mode)} color={'white'}/></IonAvatar>
               <IonLabel>
-                <h2>
-                  {journey.startDate.toLocaleDateString()}
-                  {!datesAreOnSameDay(journey.startDate, journey.endDate)
-                    ? " - " + journey.endDate.toLocaleDateString()
-                    : ""}
-                </h2>
-                <p>
-                  {journey.startDate.toLocaleTimeString()} -{" "}
-                  {journey.endDate.toLocaleTimeString()}
-                </p>
-                <p>CO2: {journey.co2Footprint}</p>
-                <p>
-                  {journey.distance} km ({journey.avgSpeed} km/h)
-                </p>
+                <h2>{journey.date.toLocaleDateString()}</h2>
+                <p>CO2: {journey.co2Footprint.toFixed(10)} kg</p>
+                <p>{journey.distance.toFixed(2)} km</p>
               </IonLabel>
             </IonItem>
-          ))}
+          )}
         </IonList>
       </IonContent>
     </IonPage>
