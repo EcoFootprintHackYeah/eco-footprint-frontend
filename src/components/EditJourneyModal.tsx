@@ -56,7 +56,7 @@ export const EditJourneyModal = ({
         <IonContent>
           <IonHeader>
             <IonToolbar>
-              <IonTitle>Edit journey </IonTitle>
+              <IonTitle>Edit your journey </IonTitle>
             </IonToolbar>
           </IonHeader>
           <IonList>

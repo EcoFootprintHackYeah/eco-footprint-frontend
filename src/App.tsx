@@ -2,10 +2,10 @@ import React, {useEffect} from "react";
 import {Redirect, Route} from "react-router-dom";
 import {IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs,} from "@ionic/react";
 import {IonReactRouter} from "@ionic/react-router";
-import {ellipse, square, triangle, compass } from "ionicons/icons";
+import {compass, car, barChart } from "ionicons/icons";
 import RecordTrips from "./pages/RecordTrips";
 import JourneysList from "./pages/JourneysList";
-import Tab3 from "./pages/Tab3";
+import Statistics from "./pages/Statistics";
 import {Plugins} from "@capacitor/core";
 
 /* Core CSS required for Ionic components to work properly */
@@ -68,29 +68,29 @@ const App: React.FC<AppProps> = (props: AppProps) => {
         {props.authenticated && (
           <IonTabs>
             <IonRouterOutlet>
-              <Route path="/tab1" component={RecordTrips} exact={true}/>
-              <Route path="/tab2" component={JourneysList} exact={true}/>
-              <Route path="/tab3" component={Tab3}/>
+              <Route path="/home" component={RecordTrips} exact={true}/>
+              <Route path="/trips" component={JourneysList} exact={true}/>
+              <Route path="/statistics" component={Statistics}/>
               <Route path="/registration" component={Registration} exact={true}/>
               <Route
                 path="/"
-                render={() => <Redirect to="/tab1"/>}
+                render={() => <Redirect to="/home"/>}
                 exact={true}
               />
             </IonRouterOutlet>
 
             <IonTabBar slot="bottom">
-              <IonTabButton tab="tab1" href="/tab1">
+              <IonTabButton tab="home" href="/home">
                 <IonIcon icon={compass}/>
                 <IonLabel>Record</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="tab2" href="/tab2">
-                <IonIcon icon={ellipse}/>
-                <IonLabel>Tab 2</IonLabel>
+              <IonTabButton tab="trips" href="/trips">
+                <IonIcon icon={car}/>
+                <IonLabel>Your Journeys</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="tab3" href="/tab3">
-                <IonIcon icon={square}/>
-                <IonLabel>Tab 3</IonLabel>
+              <IonTabButton tab="statistics" href="/statistics">
+                <IonIcon icon={barChart}/>
+                <IonLabel>Statistics</IonLabel>
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
