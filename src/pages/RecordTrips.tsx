@@ -8,7 +8,8 @@ import {
   IonImg,
   IonLoading,
   IonPage,
-  IonRow, IonTabs,
+  IonRow,
+  IonTabs,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -34,6 +35,55 @@ import { makeStyles } from "@material-ui/core";
 // Paris agreement budget
 const MaxBudget = 166;
 
+const categoriesOptions = {
+  plotOptions: {
+    radialBar: {
+      offsetY: 0,
+      startAngle: 0,
+      endAngle: 270,
+      hollow: {
+        margin: 5,
+        size: "30%",
+        background: "transparent",
+        image: undefined,
+      },
+      dataLabels: {
+        name: {
+          show: true,
+        },
+        value: {
+          show: true,
+        },
+      },
+    },
+  },
+  grid: {
+    padding: {
+      left: 0,
+      top: 0,
+    },
+  },
+  colors: ["#1ab7ea", "#0084ff", "#39539E", "#0077B5"],
+  labels: ["Trips", "Electricity", "Music", "Movies", "Food"],
+  legend: {
+    show: true,
+    floating: true,
+    fontSize: "16px",
+    position: "left",
+    offsetX: 15,
+    offsetY: 35,
+    labels: {
+      useSeriesColors: true,
+    },
+    markers: {
+      size: 0,
+    },
+    itemMargin: {
+      vertical: 3,
+    },
+  },
+};
+
 const options = {
   chart: {
     height: 350,
@@ -56,7 +106,7 @@ const options = {
     },
   },
   fill: {
-    colors: ["#9ECE9A"]
+    colors: ["#9ECE9A"],
   },
   stroke: {
     lineCap: "round",
@@ -157,9 +207,6 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
       ts: d.timestamp,
     }));
 
-    // console.log(FakeBike);
-    // console.log(reqData);
-
     const inferenceResponse = await Axios.post<
       InferenceRequest,
       AxiosResponse<InferenceResponse>
@@ -213,16 +260,28 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
         </IonHeader>
         <IonGrid>
           {!isTravelling && (
-            <IonRow className="ion-align-items-center">
-              <IonCol>
-                <ReactApexChart
-                  options={options}
-                  series={[getPercOfMax(footprint).toFixed(2)]}
-                  type="radialBar"
-                  height={350}
-                />
-              </IonCol>
-            </IonRow>
+            <>
+              <IonRow className="ion-align-items-center">
+                <IonCol>
+                  <ReactApexChart
+                    options={options}
+                    series={[getPercOfMax(footprint).toFixed(2)]}
+                    type="radialBar"
+                    height={320}
+                  />
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  <ReactApexChart
+                    options={categoriesOptions}
+                    series={[50, 60, 10, 70, 20]}
+                    type="radialBar"
+                    height={300}
+                  />
+                </IonCol>
+              </IonRow>
+            </>
           )}
           <IonRow>
             <MapComponent onTravelStart={onStart} onTravelEnd={onEnd} />
