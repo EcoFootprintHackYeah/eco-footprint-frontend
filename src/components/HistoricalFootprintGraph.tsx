@@ -14,7 +14,7 @@ const options = (data: HistoricalFootprint, recommendedLevel: number) => {
     chart: {
       height: 350,
       type: 'line',
-      foreColor: '#D1D8DC',
+      foreColor: '#737373',
       dropShadow: {
         enabled: true,
         color: '#000',
@@ -27,7 +27,7 @@ const options = (data: HistoricalFootprint, recommendedLevel: number) => {
         show: false
       }
     },
-    colors: ['#77B6EA'],
+    colors: ['#296160'],
     dataLabels: {
       enabled: true,
     },
@@ -66,8 +66,8 @@ const options = (data: HistoricalFootprint, recommendedLevel: number) => {
         y: recommendedLevel,
         y2: recommendedLevel + 1,
         opacity: 0.9,
-        borderColor: 'red',
-        fillColor: 'red',
+        borderColor: '#A594F9',
+        fillColor: '#A594F9',
       }]
     }
   }

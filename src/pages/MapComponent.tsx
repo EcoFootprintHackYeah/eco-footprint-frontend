@@ -105,7 +105,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         <>
           <IonRow className="ion-align-items-center">
             <IonCol className="ion-text-center">
-              <IonButton onClick={stopWatching}>Stop Travelling</IonButton>
+              <IonButton onClick={stopWatching}>Stop Traveling</IonButton>
             </IonCol>
           </IonRow>
         </>
@@ -114,7 +114,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         <>
           <IonRow className="ion-align-items-center">
             <IonCol className="ion-text-center">
-              <IonButton onClick={watchLocation}>Start Travelling</IonButton>
+              <IonButton onClick={watchLocation}>Start Traveling</IonButton>
             </IonCol>
           </IonRow>
         </>
