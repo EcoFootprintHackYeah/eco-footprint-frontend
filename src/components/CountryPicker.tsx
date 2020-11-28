@@ -41,6 +41,7 @@ const CountryPicker: React.FC<CountryPickerProps> = ({ onCountryChange }) => {
       <IonList className="country-ion-list">
         {Object.keys(ElectricityType)
           .filter(excludeElectricityType)
+          .sort()
           .map((key) => (
             <IonItem
               button

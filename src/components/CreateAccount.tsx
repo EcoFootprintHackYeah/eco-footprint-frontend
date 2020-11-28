@@ -1,5 +1,5 @@
 import React from "react";
-import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar,} from "@ionic/react";
+import {IonAvatar, IonContent, IonHeader, IonImg, IonPage, IonTitle, IonToolbar,} from "@ionic/react";
 import {Plugins} from "@capacitor/core";
 import instance from "../services/apiCalls";
 import {AxiosResponse} from "axios";
@@ -7,11 +7,24 @@ import {UserModel} from "../services/userModel";
 import {useDispatch} from "react-redux";
 import Registration from "../pages/Registration";
 import {FormDict} from "./RegistrationForm";
+import { makeStyles } from "@material-ui/core";
 
 const {Storage} = Plugins;
+const useStyles = makeStyles({
+  title: {
+    display: "inline-block",
+    verticalAlign: "middle",
+  },
+  image: {
+    display: "inline-block",
+    transform: "scale(0.75)",
+    verticalAlign: "middle",
+  },
+});
 
 const CreateAccount: React.FC<{}> = () => {
   const dispatch = useDispatch();
+  const classes = useStyles();
 
   async function authenticate(userData: FormDict) {
     const response = await instance.post<any, AxiosResponse<UserModel>>(
@@ -33,8 +46,11 @@ const CreateAccount: React.FC<{}> = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Setup profile</IonTitle>
+      <IonToolbar color="primary">
+          <IonAvatar className={classes.image}>
+            <IonImg src="/logo.png" />
+          </IonAvatar>
+          <IonTitle className={classes.title}>EloEco</IonTitle>
         </IonToolbar>
       </IonHeader>
       <Registration onSubmit={(data) => authenticate(data)}/>

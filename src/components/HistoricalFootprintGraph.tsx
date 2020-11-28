@@ -1,3 +1,5 @@
+import { IonTitle } from "@ionic/react";
+import { makeStyles } from "@material-ui/core";
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
@@ -32,10 +34,7 @@ const options = (data: HistoricalFootprint, recommendedLevel: number) => {
     stroke: {
       curve: 'smooth'
     },
-    title: {
-      text: 'Your historical footprint',
-      align: 'center'
-    },
+
     grid: {
       borderColor: '#e7e7e7',
       row: {
@@ -76,17 +75,29 @@ const options = (data: HistoricalFootprint, recommendedLevel: number) => {
 
 export const sampleMonthsFootprint: HistoricalFootprint = {
   xs: ['Jan', 'Feb', 'Mar', 'Apr'],
-  ys: [90, 70, 80, 150],
+  ys: [90, 70, 90, 180],
   xlabel: 'Month'
 }
 
+const useStyles = makeStyles({
+  title: {
+    margin: "auto",
+    textAlign: "center",
+    padding: "15px",
+  },
+});
+
 const HistoricalFootprintGraph = ({data, recommendedLevel}: { data: HistoricalFootprint, recommendedLevel: number }) => {
+  const classes = useStyles();
   const series = [{
     name: 'Footprint',
     data: data.ys
   }]
   return (
+    <>
+    <IonTitle className={classes.title}>Your historical footprint</IonTitle>
     <ReactApexChart options={options(data, recommendedLevel)} type={'line'} series={series} height={350}/>
+    </>
   )
 }
 

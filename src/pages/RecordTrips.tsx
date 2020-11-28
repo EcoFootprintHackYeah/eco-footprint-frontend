@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
-  IonButton,
+  IonAvatar,
   IonCol,
   IonContent,
   IonGrid,
   IonHeader,
+  IonImg,
   IonLoading,
   IonPage,
   IonRow, IonTabs,
@@ -14,15 +15,13 @@ import {
 import "./RecordTrips.css";
 import ReactApexChart from "react-apexcharts";
 import instance from "../services/apiCalls";
-import CreateAccount from "../components/CreateAccount";
-import { Geolocation, GeolocationPosition } from "@capacitor/core";
+import { GeolocationPosition } from "@capacitor/core";
 import MapComponent from "./MapComponent";
 import Axios, { AxiosResponse } from "axios";
 import {
   InferenceData,
   InferenceRequest,
   InferenceResponse,
-  TravelType,
 } from "../model/Inference";
 import environment from "../environment";
 import TransportSelectionModal from "./TransportSelectionModal";
@@ -33,6 +32,7 @@ import AdvicesSchedulerWrapper from "../components/AdvicesSchedulerWrapper";
 
 // Paris agreement budget
 const MaxBudget = 166;
+import { makeStyles } from "@material-ui/core";
 
 const options = {
   chart: {
@@ -55,10 +55,14 @@ const options = {
       },
     },
   },
+  fill: {
+    colors: ["#9ECE9A"]
+  },
   stroke: {
     lineCap: "round",
   },
-  labels: ["Your current footprint"],
+  colors: ["#296160"],
+  labels: ["Your monthly footprint"],
 };
 
 const FakeBike = [
@@ -93,6 +97,18 @@ const FakeWalk = [
   { lat: 46.25684015892485, lng: 6.0266320669602065, ts: 1606576879889 },
 ];
 
+const useStyles = makeStyles({
+  title: {
+    display: "inline-block",
+    verticalAlign: "middle",
+  },
+  image: {
+    display: "inline-block",
+    transform: "scale(0.75)",
+    verticalAlign: "middle",
+  },
+});
+
 interface RecordTripsProps {
   creds: any;
 }
@@ -106,6 +122,7 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
   const [isTravelling, setIsTravelling] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [show, setShowModal] = useState(false);
+  const classes = useStyles();
 
   const [inference, setInferenceResponse] = useState<InferenceResponse | null>(
     null
@@ -181,8 +198,11 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
       )}
       <IonLoading isOpen={isLoading} message={"Inferring..."} />
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Record trip</IonTitle>
+        <IonToolbar color="primary">
+          <IonAvatar className={classes.image}>
+            <IonImg src="/logo.png" />
+          </IonAvatar>
+          <IonTitle className={classes.title}>EloEco</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>

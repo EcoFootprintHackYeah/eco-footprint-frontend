@@ -4,6 +4,7 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonImg,
   IonItem,
   IonLabel,
   IonList,
@@ -15,6 +16,7 @@ import {AIRPLANE, BICYCLE, BUS, CAR} from "../model/TransportMode";
 import {EditJourneyModal} from "../components/EditJourneyModal";
 import {JourneyEntry} from "../model/JourneyEntry";
 import {datesAreOnSameDay} from "../services/dates";
+import { makeStyles } from '@material-ui/core';
 
 const data: JourneyEntry[] = [{
   startDate: new Date(2020, 11, 20, 10, 15),
@@ -53,16 +55,37 @@ const data: JourneyEntry[] = [{
   mode: BUS
 }]
 
+const datesAreOnSameDay = (first: Date, second: Date) =>
+  first.getFullYear() === second.getFullYear() &&
+  first.getMonth() === second.getMonth() &&
+  first.getDate() === second.getDate();
+
+  const useStyles = makeStyles({
+    title: {
+      display: "inline-block",
+      verticalAlign: "middle",
+    },
+    image: {
+      display: "inline-block",
+      transform: "scale(0.75)",
+      verticalAlign: "middle",
+    },
+  });
+
 const JourneysList: React.FC = () => {
   const [editingJourney, setEditingJourney] = useState<JourneyEntry | undefined>(undefined)
+  const classes = useStyles();
 
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Your journeys</IonTitle>
+      <IonToolbar color="primary">
+          <IonAvatar className={classes.image}>
+            <IonImg src="/logo.png" />
+          </IonAvatar>
+          <IonTitle className={classes.title}>EloEco</IonTitle>
         </IonToolbar>
-      </IonHeader>
+      </IonHeader> 
       <IonContent fullscreen>
         {editingJourney !== undefined &&
         <EditJourneyModal close={() => setEditingJourney(undefined)}
