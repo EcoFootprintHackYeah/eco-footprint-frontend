@@ -29,10 +29,10 @@ import { Selectors } from "../selectors";
 import { connect } from "react-redux";
 import { State } from "../reducers/stateTypes";
 import AdvicesSchedulerWrapper from "../components/AdvicesSchedulerWrapper";
+import { makeStyles } from "@material-ui/core";
 
 // Paris agreement budget
 const MaxBudget = 166;
-import { makeStyles } from "@material-ui/core";
 
 const options = {
   chart: {
