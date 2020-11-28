@@ -13,6 +13,7 @@ import {
 import "./Tab1.css";
 import ReactApexChart from "react-apexcharts";
 import instance from "../services/apiCalls";
+import CreateAccount from "../components/CreateAccount";
 
 const options = {
   chart: {
@@ -82,6 +83,9 @@ const Tab1: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonGrid>
+          <IonRow>
+              <CreateAccount />
+          </IonRow>
           <IonRow className="ion-align-items-center">
             <IonCol>
               <ReactApexChart
