@@ -37,9 +37,7 @@ const CreateAccount: React.FC<{}> = () => {
           <IonTitle>Setup profile</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
-        <Registration onSubmit={(data) => authenticate(data)}/>
-      </IonContent>
+      <Registration onSubmit={(data) => authenticate(data)}/>
     </IonPage>
   );
 };

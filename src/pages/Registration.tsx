@@ -1,56 +1,88 @@
-import React from "react"
+import React from "react";
 import RegistrationForm, {
   FormDict,
   RegistrationFormPart,
-  RegistrationFormPartProps
+  RegistrationFormPartProps,
 } from "../components/RegistrationForm";
 import {
-  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonIcon,
-  IonInput
 } from "@ionic/react";
-import {leaf} from "ionicons/icons";
+import { leaf } from "ionicons/icons";
+import CountryPicker from "../components/CountryPicker";
+import ElectiricityPicker from "../components/ElectricityPicker";
+import StreamingPicker from "../components/StreamingPicker";
+import MusicPicker from "../components/MusicPicker";
+import FoodPicker from "../components/FoodPicker";
 
-const WelcomeRegistrationPart = () =>
+const WelcomeRegistrationPart = () => (
   <IonCard>
-    <img src="https://jacksonjournal.news/wp-content/uploads/2020/10/unnamed-file.jpg"/>
+    <img src="/footprint.png" />
     <IonCardHeader>
       <IonCardSubtitle>Account creation</IonCardSubtitle>
       <IonCardTitle>Welcome</IonCardTitle>
     </IonCardHeader>
 
     <IonCardContent>
-      We need a bit more information about you in order to better estimate
-      your CO2 <IonIcon icon={leaf}/> footprint.
+      We need a bit more information about you in order to better estimate your
+      CO2 <IonIcon icon={leaf} /> footprint.
     </IonCardContent>
   </IonCard>
+);
 
-const FormPart1: RegistrationFormPart = ({onDataUpdate}: RegistrationFormPartProps) =>
-  <>
-    <IonButton onClick={() => onDataUpdate({country: 'Poland'})}>Click to select Poland</IonButton>
-  </>
+const FormCountry: RegistrationFormPart = ({
+  onDataUpdate,
+}: RegistrationFormPartProps) => (
+  <CountryPicker onCountryChange={onDataUpdate} />
+);
 
-const FormPart1InitialData = {country: 'Russia'}
-const FormPart2: RegistrationFormPart = ({currentPartData, onDataUpdate}: RegistrationFormPartProps) =>
-  <>
-    <IonInput type={'number'} value={currentPartData['redMeatPerWeek']}
-              onIonChange={e => onDataUpdate({redMeatPerWeek: parseInt(e.detail.value!)})}/>
-    <IonInput type={'number'} value={currentPartData['whiteMeatPerWeek']}
-              onIonChange={e => onDataUpdate({whiteMeatPerWeek: parseInt(e.detail.value!)})}/>
-  </>
+const FormElectricity: RegistrationFormPart = ({
+  onDataUpdate,
+}: RegistrationFormPartProps) => (
+  <ElectiricityPicker onElectricityChange={onDataUpdate} />
+);
 
-const FormPart2InitialData = {redMeatPerWeek: 0, whiteMeatPerWeek: 0, fishPerWeek: 2}
+const FormStreaming: RegistrationFormPart = ({
+  onDataUpdate,
+}: RegistrationFormPartProps) => (
+  <StreamingPicker onStreamingChange={onDataUpdate} />
+);
 
-const OtherPartsInitialData = {netflixHoursPerWeek: 5, musicHoursPerDay: 3, kwhPerMonth: 200}
+const FormMusic: RegistrationFormPart = ({
+  onDataUpdate,
+}: RegistrationFormPartProps) => <MusicPicker onMusicChange={onDataUpdate} />;
 
-const Registration = ({onSubmit}: { onSubmit: (data: FormDict) => void }) =>
-  <RegistrationForm onSubmit={onSubmit}
-                    parts={[WelcomeRegistrationPart, FormPart1, FormPart2]}
-                    initialData={[FormPart1InitialData, FormPart2InitialData, OtherPartsInitialData]}/>
+const FormFood: RegistrationFormPart = ({
+  onDataUpdate,
+}: RegistrationFormPartProps) => <FoodPicker onFoodChange={onDataUpdate} />;
 
-export default Registration
+const InitialData = {
+  country: "world",
+  netflixHoursPerWeek: 5,
+  musicHoursPerDay: 3,
+  kwhPerMonth: 200,
+  redMeatPerWeek: 0,
+  whiteMeatPerWeek: 0,
+  fishPerWeek: 0,
+};
+
+const Registration = ({ onSubmit }: { onSubmit: (data: FormDict) => void }) => (
+  <RegistrationForm
+    onSubmit={onSubmit}
+    parts={[
+      WelcomeRegistrationPart,
+      FormCountry,
+      FormElectricity,
+      FormStreaming,
+      FormMusic,
+      FormFood,
+    ]}
+    initialData={[InitialData]}
+  />
+);
+
+export default Registration;

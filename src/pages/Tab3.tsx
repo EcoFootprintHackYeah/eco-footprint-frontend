@@ -11,6 +11,7 @@ import HistoricalFootprintGraph, {
   sampleMonthsFootprint,
 } from "../components/HistoricalFootprintGraph";
 
+
 const Tab3: React.FC = () => {
   return (
     <IonPage>
