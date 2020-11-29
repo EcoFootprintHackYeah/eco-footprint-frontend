@@ -25,3 +25,25 @@ Start the application:
 In order to build the application for your Android device:
 
 ```ionic capacitor build android```
+
+# Images
+## Registration
+![](images/registration1.png)
+![](images/registration2.png)
+![](images/registration3.png)
+![](images/registration4.png)
+![](images/registration5.png)
+![](images/registration6.png)
+
+## Travel recording
+![](images/record1.png)
+![](images/record3.png)
+![](images/record4.png)
+![](images/record5.png)
+![](images/journeys1.png)
+![](images/journeys2.png)
+
+## Statistics
+![](images/record2.png)
+![](images/statistics.png)
+
