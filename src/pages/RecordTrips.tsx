@@ -70,11 +70,11 @@ const categoriesOptions = {
   labels: ["Trips", "Electricity", "Music", "Movies", "Food"],
   legend: {
     show: true,
-    floating: false,
+    floating: true,
     fontSize: "16px",
     position: "left",
-    offsetX: 15,
-    offsetY: 35,
+    offsetX: 0,
+    offsetY: 15,
     labels: {
       useSeriesColors: true,
     },
