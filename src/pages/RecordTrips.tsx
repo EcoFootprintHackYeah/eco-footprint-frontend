@@ -16,6 +16,7 @@ import {
   IonTitle,
   IonToggle,
   IonToolbar,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import "./RecordTrips.css";
 import ReactApexChart from "react-apexcharts";
@@ -194,6 +195,8 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
   const [inference, setInferenceResponse] = useState<InferenceResponse | null>(
     null
   );
+  const [height, setHeight] = useState(310);
+  useIonViewWillEnter(() => setHeight(310 + Math.random()));
 
   useEffect(() => {
     async function fetchFootprint() {
@@ -243,7 +246,7 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
         password: creds.apiKey,
       },
     });
-    setAggregatedFoodprint(request.data.total);
+    setAggregatedFoodprint(request.data);
   };
 
   const onEnd = async (data: GeolocationPosition[]) => {
@@ -356,7 +359,7 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
                       options={options}
                       series={[getPercOfMax(footprint).toFixed(2)]}
                       type="radialBar"
-                      height={320}
+                      height={height}
                     />
                   </IonCol>
                 </IonRow>
@@ -376,7 +379,7 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
                         getPercOfMax(aggregatedFootprint!.food).toFixed(2),
                       ]}
                       type="radialBar"
-                      height={300}
+                      height={height}
                     />
                   </IonCol>
                 </IonRow>
