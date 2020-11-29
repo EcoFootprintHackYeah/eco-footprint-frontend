@@ -258,7 +258,7 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
     const inferenceResponse = await Axios.post<
       InferenceRequest,
       AxiosResponse<InferenceResponse>
-    >(environment.inferenceEndpoint, { points: FakeBike });
+    >(environment.inferenceEndpoint, { points: reqData });
 
     setInferenceResponse(inferenceResponse.data);
     setShowModal(true);
@@ -280,6 +280,7 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
     setIsLoading(false);
     setShowModal(false);
     getMonthlyFootprint();
+    getMonthlyFootprintAggregated();
   };
 
   return (
