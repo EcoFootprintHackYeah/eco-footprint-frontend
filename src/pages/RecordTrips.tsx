@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   IonAvatar,
+  IonButton,
   IonCol,
   IonContent,
   IonGrid,
@@ -19,7 +20,7 @@ import {
 import "./RecordTrips.css";
 import ReactApexChart from "react-apexcharts";
 import instance from "../services/apiCalls";
-import { GeolocationPosition } from "@capacitor/core";
+import { GeolocationPosition, Storage } from "@capacitor/core";
 import MapComponent from "./MapComponent";
 import Axios, { AxiosResponse } from "axios";
 import {
@@ -30,7 +31,7 @@ import {
 import environment from "../environment";
 import TransportSelectionModal from "./TransportSelectionModal";
 import { Selectors } from "../selectors";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { State } from "../reducers/stateTypes";
 import AdvicesSchedulerWrapper from "../components/AdvicesSchedulerWrapper";
 import { makeStyles } from "@material-ui/core";
@@ -188,6 +189,7 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [show, setShowModal] = useState(false);
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const [inference, setInferenceResponse] = useState<InferenceResponse | null>(
     null
@@ -283,6 +285,21 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
     getMonthlyFootprintAggregated();
   };
 
+  const deleteUser = async () => {
+    await instance.delete("/user", {
+      auth: {
+        username: creds.id,
+        password: creds.apiKey,
+      },
+    });
+    await Storage.remove({ key: "account" });
+
+    dispatch({
+      type: "SET_AUTHENTICATED",
+      authenticated: false,
+    });
+  };
+
   return (
     <IonPage>
       <AdvicesSchedulerWrapper />
@@ -311,6 +328,16 @@ const RecordTrips: React.FC<RecordTripsProps> = ({ creds }) => {
         <IonGrid>
           {!isTravelling && (
             <>
+              <IonRow className="ion-align-items-center">
+                <IonCol>
+                  <IonItem>
+                    <IonLabel>Remove all user data?</IonLabel>
+                    <IonButton color="danger" onClick={deleteUser}>
+                      Forget me
+                    </IonButton>
+                  </IonItem>
+                </IonCol>
+              </IonRow>
               <IonRow className="ion-align-items-center">
                 <IonCol>
                   <IonItem>
